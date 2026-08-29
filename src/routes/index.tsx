@@ -1,13 +1,55 @@
 import { createFileRoute } from "@tanstack/react-router";
+import Input from "../components/input";
+import Button from "../components/button";
+import { useRef } from "react";
+import type { BaseUIEvent } from "@base-ui/react/types";
+import { useCreateUploadUrl } from "../hooks/use-create-upload-url";
+import { useUploadFile } from "../hooks/use-upload-file";
+import { useCompleteUpload } from "../hooks/use-complete-upload";
 
 export const Route = createFileRoute("/")({
   component: Index,
 });
 
 function Index() {
+  const createUploadUrl = useCreateUploadUrl();
+  const uploadFile = useUploadFile();
+  const completeUpload = useCompleteUpload();
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  async function handleFileChange(
+    e: BaseUIEvent<React.ChangeEvent<HTMLInputElement, HTMLInputElement>>,
+  ) {
+    if (e.target.files) {
+      const file = e.target.files[0];
+
+      try {
+        const result = await createUploadUrl.mutateAsync({
+          name: file.name,
+          contentType: file.type,
+          contentLength: file.size,
+        });
+
+        await uploadFile.mutateAsync({
+          file: file,
+          url: result.url,
+          formFields: result.formFields,
+        });
+
+        await completeUpload.mutateAsync(result.id);
+      } catch (e) {
+        console.log("error:", JSON.stringify(e, null, 2));
+      }
+    } else {
+      console.log("file not selected");
+    }
+  }
+
   return (
     <div className="p-2">
-      <h3>Welcome Home!</h3>
+      <Button onClick={() => inputRef.current?.click()}>Upload file</Button>
+      <Input ref={inputRef} type="file" hidden onChange={handleFileChange} />
     </div>
   );
 }

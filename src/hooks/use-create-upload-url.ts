@@ -8,6 +8,6 @@ type UseCreateUploadUrlOptions = {
 
 export function useCreateUploadUrl({
   mutationConfig,
-}: UseCreateUploadUrlOptions) {
+}: UseCreateUploadUrlOptions = {}) {
   return useMutation({ ...mutationConfig, mutationFn: createUploadUrlAsync });
 }
