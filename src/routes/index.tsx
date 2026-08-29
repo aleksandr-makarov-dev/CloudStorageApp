@@ -21,28 +21,29 @@ function Index() {
   async function handleFileChange(
     e: BaseUIEvent<React.ChangeEvent<HTMLInputElement, HTMLInputElement>>,
   ) {
-    if (e.target.files) {
-      const file = e.target.files[0];
+    const file = e.target.files?.[0];
 
-      try {
-        const result = await createUploadUrl.mutateAsync({
-          name: file.name,
-          contentType: file.type,
-          contentLength: file.size,
-        });
-
-        await uploadFile.mutateAsync({
-          file: file,
-          url: result.url,
-          formFields: result.formFields,
-        });
-
-        await completeUpload.mutateAsync(result.id);
-      } catch (e) {
-        console.log("error:", JSON.stringify(e, null, 2));
-      }
-    } else {
+    if (!file) {
       console.log("file not selected");
+      return;
+    }
+
+    try {
+      const { url, formFields, id } = await createUploadUrl.mutateAsync({
+        name: file.name,
+        contentType: file.type,
+        contentLength: file.size,
+      });
+
+      await uploadFile.mutateAsync({
+        file,
+        url,
+        formFields,
+      });
+
+      await completeUpload.mutateAsync(id);
+    } catch (error) {
+      console.error("file upload failed:", error);
     }
   }
 
