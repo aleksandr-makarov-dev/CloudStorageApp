@@ -13,6 +13,14 @@ import {
 import { formatDate } from "../lib/formate-date";
 import { formatBytes } from "../lib/format-bytes";
 import { useQueryClient } from "@tanstack/react-query";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeaderCell,
+  TableRow,
+} from "../components/table";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -63,50 +71,38 @@ function Index() {
   }
 
   return (
-    <div className="p-2 space-y-4">
+    <div className="p-4 space-y-3">
       <div>
         <Button onClick={() => inputRef.current?.click()}>Upload file</Button>
         <Input ref={inputRef} type="file" hidden onChange={handleFileChange} />
       </div>
       <div>
-        <table className="border-collapse border">
-          <thead>
-            <tr>
-              <th className="px-3 py-2 text-left font-medium border-y">Name</th>
-              <th className="px-3 py-2 text-left font-medium border-y">
-                Content Type
-              </th>
-              <th className="px-3 py-2 text-left font-medium border-y">
-                Content Length
-              </th>
-              <th className="px-3 py-2 text-left font-medium border-y">
-                Created At
-              </th>
-              <th className="px-3 py-2 text-left font-medium border-y">
-                Last Modified At
-              </th>
-            </tr>
-          </thead>
-          <tbody>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableHeaderCell>Name</TableHeaderCell>
+              <TableHeaderCell>Content Type</TableHeaderCell>
+              <TableHeaderCell>Content Length</TableHeaderCell>
+              <TableHeaderCell>Created At</TableHeaderCell>
+              <TableHeaderCell>Last Modified At</TableHeaderCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
             {listResources.data?.map((row) => (
-              <tr key={row.id}>
-                <td className="px-3 py-2 border-y text-left">{row.name}</td>
-                <td className="px-3 py-2 border-y text-left">
-                  {row.contentType}
-                </td>
-                <td className="px-3 py-2 border-y text-right">
+              <TableRow key={row.id}>
+                <TableCell>{row.name}</TableCell>
+                <TableCell>{row.contentType}</TableCell>
+                <TableCell className="text-right">
                   {formatBytes(row.contentLength)}
-                </td>
-                <td className="px-3 py-2 border-y text-left">
-                  {formatDate(row.createdAtUtc)}
-                </td>
-                <td className="px-3 py-2 border-y text-left">
+                </TableCell>
+                <TableCell>{formatDate(row.createdAtUtc)}</TableCell>
+                <TableCell>
                   {row.lastModifiedAtUtc && formatDate(row.lastModifiedAtUtc)}
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </div>
     </div>
   );
