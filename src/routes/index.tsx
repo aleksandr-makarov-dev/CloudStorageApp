@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import Input from "../components/input";
-import Button from "../components/button";
+import Input from "../components/ui/input";
+import Button from "../components/ui/button";
 import { useRef } from "react";
 import type { BaseUIEvent } from "@base-ui/react/types";
 import { useCreateUploadUrl } from "../hooks/use-create-upload-url";
@@ -20,22 +20,35 @@ import {
   TableHead,
   TableHeaderCell,
   TableRow,
-} from "../components/table";
+} from "../components/ui/table";
 import {
   EllipsisHorizontalIcon,
-  Menu,
+  MenuContent,
   MenuItem,
+  MenuRoot,
   MenuSeparator,
   MenuTrigger,
-} from "../components/menu";
+} from "../components/ui/menu";
 import { Menu as BaseMenu } from "@base-ui/react/menu";
 import React from "react";
+import {
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogRoot,
+  DialogTitle,
+  DialogTrigger,
+} from "../components/ui/dialog";
+import { Dialog as BaseDialog } from "@base-ui/react/dialog";
 
 export const Route = createFileRoute("/")({
   component: Index,
 });
 
 const actionMenuHandle = BaseMenu.createHandle<{ id: string }>();
+const dialogHandle = BaseDialog.createHandle();
 
 function Index() {
   const queryClient = useQueryClient();
@@ -123,10 +136,12 @@ function Index() {
           ))}
         </TableBody>
       </Table>
-      <Menu handle={actionMenuHandle}>
+      <MenuRoot handle={actionMenuHandle}>
         {({ payload }) => (
-          <React.Fragment>
-            <MenuItem>Rename</MenuItem>
+          <MenuContent>
+            <MenuItem onClick={() => dialogHandle.open("rename")}>
+              Rename
+            </MenuItem>
             <MenuItem>Duplicate</MenuItem>
             <MenuItem>Move to folder</MenuItem>
             <MenuSeparator />
@@ -139,9 +154,23 @@ function Index() {
             >
               Delete
             </MenuItem>
-          </React.Fragment>
+          </MenuContent>
         )}
-      </Menu>
+      </MenuRoot>
+      <DialogRoot handle={dialogHandle}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Notifications</DialogTitle>
+            <DialogDescription>
+              This is very important notification...
+            </DialogDescription>
+          </DialogHeader>
+          <div>Hello world!</div>
+          <DialogFooter>
+            <DialogClose>Close</DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </DialogRoot>
     </div>
   );
 }

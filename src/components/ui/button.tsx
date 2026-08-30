@@ -1,10 +1,11 @@
 import { Button as BaseButton } from "@base-ui/react/button";
 import type { ComponentProps } from "react";
-import { cn } from "../lib/cn";
+import { cn } from "../../lib/cn";
 
-type ButtonProps = ComponentProps<typeof BaseButton>;
-
-export default function Button({ className, ...props }: ButtonProps) {
+export default function Button({
+  className,
+  ...props
+}: ComponentProps<typeof BaseButton>) {
   return (
     <BaseButton
       className={cn(
