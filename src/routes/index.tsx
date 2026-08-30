@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import Input from "../components/ui/input";
 import Button from "../components/ui/button";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import type { BaseUIEvent } from "@base-ui/react/types";
 import { useCreateUploadUrl } from "../hooks/use-create-upload-url";
 import { useUploadFile } from "../hooks/use-upload-file";
@@ -39,16 +39,27 @@ import {
   DialogHeader,
   DialogRoot,
   DialogTitle,
-  DialogTrigger,
 } from "../components/ui/dialog";
 import { Dialog as BaseDialog } from "@base-ui/react/dialog";
+import { useUpdateResource } from "../hooks/use-update-resource";
+import z from "zod";
+import { Form } from "../components/ui/form";
+import { Field } from "../components/ui/field";
+import type { ResourceResponse } from "../models/resource-response";
 
 export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const actionMenuHandle = BaseMenu.createHandle<{ id: string }>();
-const dialogHandle = BaseDialog.createHandle();
+const actionMenuHandle = BaseMenu.createHandle<ResourceResponse>();
+const dialogHandle = BaseDialog.createHandle<ResourceResponse>();
+
+const schema = z.object({
+  id: z.string().min(1).max(36),
+  name: z.string().min(1).max(128),
+});
+
+const formId = "UPDATE_RESOURCE_FORM";
 
 function Index() {
   const queryClient = useQueryClient();
@@ -56,6 +67,7 @@ function Index() {
   const uploadFile = useUploadFile();
   const completeUpload = useCompleteUpload();
   const listResources = useListResources();
+  const updateResource = useUpdateResource();
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -89,8 +101,25 @@ function Index() {
       queryClient.invalidateQueries({
         queryKey: listResourcesQueryOptions().queryKey,
       });
-    } catch (error) {
-      console.error("file upload failed:", error);
+    } catch (e) {
+      console.error("file upload failed:", JSON.stringify(e, null, 2));
+    }
+  }
+
+  async function handleUpdateResource(data: z.infer<typeof schema>) {
+    try {
+      await updateResource.mutateAsync({
+        id: data.id,
+        request: { name: data.name },
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: listResourcesQueryOptions().queryKey,
+      });
+
+      dialogHandle.close();
+    } catch (e) {
+      console.log("failed to update resource", JSON.stringify(e, null, 2));
     }
   }
 
@@ -127,7 +156,7 @@ function Index() {
                 <MenuTrigger
                   className="size-8 border-0 p-0"
                   handle={actionMenuHandle}
-                  payload={{ id: row.id }}
+                  payload={row}
                 >
                   <EllipsisHorizontalIcon className="size-4" />
                 </MenuTrigger>
@@ -139,7 +168,7 @@ function Index() {
       <MenuRoot handle={actionMenuHandle}>
         {({ payload }) => (
           <MenuContent>
-            <MenuItem onClick={() => dialogHandle.open("rename")}>
+            <MenuItem onClick={() => dialogHandle.openWithPayload(payload!)}>
               Rename
             </MenuItem>
             <MenuItem>Duplicate</MenuItem>
@@ -157,21 +186,47 @@ function Index() {
           </MenuContent>
         )}
       </MenuRoot>
-      <DialogRoot handle={dialogHandle}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Notifications</DialogTitle>
-            <DialogDescription>
-              This is very important notification...
-            </DialogDescription>
-          </DialogHeader>
-          <div className="flex">
-            <Input placeholder="Enter new name..." className="w-full" />
-          </div>
-          <DialogFooter>
-            <DialogClose>Close</DialogClose>
-          </DialogFooter>
-        </DialogContent>
+      <DialogRoot handle={dialogHandle} disablePointerDismissal>
+        {({ payload }) => (
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Update resource</DialogTitle>
+              <DialogDescription>
+                Specify a new name for the resource and save the changes.
+              </DialogDescription>
+            </DialogHeader>
+            <Form
+              id={formId}
+              schema={schema}
+              onSubmit={handleUpdateResource}
+              options={{
+                defaultValues: {
+                  id: payload?.id,
+                  name: payload?.name,
+                },
+              }}
+            >
+              {({ control }) => (
+                <React.Fragment>
+                  <Field
+                    label="Name"
+                    control={control}
+                    name="name"
+                    render={({ field }) => (
+                      <Input className="w-full" {...field} />
+                    )}
+                  />
+                </React.Fragment>
+              )}
+            </Form>
+            <DialogFooter>
+              <Button form={formId} type="submit">
+                Save changes
+              </Button>
+              <DialogClose>Cancel</DialogClose>
+            </DialogFooter>
+          </DialogContent>
+        )}
       </DialogRoot>
     </div>
   );

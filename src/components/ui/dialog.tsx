@@ -54,7 +54,7 @@ export function DialogTitle({
   return (
     <BaseDialog.Title
       {...props}
-      className={cn("text-base font-bold", className)}
+      className={cn("text-base font-medium", className)}
     />
   );
 }
