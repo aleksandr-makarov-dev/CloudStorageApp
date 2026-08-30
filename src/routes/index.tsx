@@ -21,10 +21,21 @@ import {
   TableHeaderCell,
   TableRow,
 } from "../components/table";
+import {
+  EllipsisHorizontalIcon,
+  Menu,
+  MenuItem,
+  MenuSeparator,
+  MenuTrigger,
+} from "../components/menu";
+import { Menu as BaseMenu } from "@base-ui/react/menu";
+import React from "react";
 
 export const Route = createFileRoute("/")({
   component: Index,
 });
+
+const actionMenuHandle = BaseMenu.createHandle<{ id: string }>();
 
 function Index() {
   const queryClient = useQueryClient();
@@ -76,34 +87,61 @@ function Index() {
         <Button onClick={() => inputRef.current?.click()}>Upload file</Button>
         <Input ref={inputRef} type="file" hidden onChange={handleFileChange} />
       </div>
-      <div>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableHeaderCell>Name</TableHeaderCell>
-              <TableHeaderCell>Content Type</TableHeaderCell>
-              <TableHeaderCell>Content Length</TableHeaderCell>
-              <TableHeaderCell>Created At</TableHeaderCell>
-              <TableHeaderCell>Last Modified At</TableHeaderCell>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableHeaderCell>Name</TableHeaderCell>
+            <TableHeaderCell>Content Type</TableHeaderCell>
+            <TableHeaderCell>Content Length</TableHeaderCell>
+            <TableHeaderCell>Created At</TableHeaderCell>
+            <TableHeaderCell>Last Modified At</TableHeaderCell>
+            <TableHeaderCell />
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {listResources.data?.map((row) => (
+            <TableRow key={row.id}>
+              <TableCell>{row.name}</TableCell>
+              <TableCell>{row.contentType}</TableCell>
+              <TableCell className="text-right">
+                {formatBytes(row.contentLength)}
+              </TableCell>
+              <TableCell>{formatDate(row.createdAtUtc)}</TableCell>
+              <TableCell>
+                {row.lastModifiedAtUtc && formatDate(row.lastModifiedAtUtc)}
+              </TableCell>
+              <TableCell>
+                <MenuTrigger
+                  className="size-8 border-0 p-0"
+                  handle={actionMenuHandle}
+                  payload={{ id: row.id }}
+                >
+                  <EllipsisHorizontalIcon className="size-4" />
+                </MenuTrigger>
+              </TableCell>
             </TableRow>
-          </TableHead>
-          <TableBody>
-            {listResources.data?.map((row) => (
-              <TableRow key={row.id}>
-                <TableCell>{row.name}</TableCell>
-                <TableCell>{row.contentType}</TableCell>
-                <TableCell className="text-right">
-                  {formatBytes(row.contentLength)}
-                </TableCell>
-                <TableCell>{formatDate(row.createdAtUtc)}</TableCell>
-                <TableCell>
-                  {row.lastModifiedAtUtc && formatDate(row.lastModifiedAtUtc)}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+          ))}
+        </TableBody>
+      </Table>
+      <Menu handle={actionMenuHandle}>
+        {({ payload }) => (
+          <React.Fragment>
+            <MenuItem>Rename</MenuItem>
+            <MenuItem>Duplicate</MenuItem>
+            <MenuItem>Move to folder</MenuItem>
+            <MenuSeparator />
+            <MenuItem
+              onClick={() =>
+                confirm(
+                  `Are you sure you want to delete ${payload?.id}? This action can't be undone`,
+                )
+              }
+            >
+              Delete
+            </MenuItem>
+          </React.Fragment>
+        )}
+      </Menu>
     </div>
   );
 }

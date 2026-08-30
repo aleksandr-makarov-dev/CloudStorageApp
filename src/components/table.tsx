@@ -12,7 +12,7 @@ export function Table({ className, ...props }: TableProps) {
 type TableHeadProps = ComponentProps<"thead">;
 
 export function TableHead({ className, ...props }: TableHeadProps) {
-  return <thead {...props} className={cn(className)} />;
+  return <thead {...props} className={cn("bg-neutral-100", className)} />;
 }
 
 type TableBodyProps = ComponentProps<"tbody">;
