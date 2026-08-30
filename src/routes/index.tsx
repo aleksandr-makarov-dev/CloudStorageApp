@@ -165,7 +165,9 @@ function Index() {
               This is very important notification...
             </DialogDescription>
           </DialogHeader>
-          <div>Hello world!</div>
+          <div className="flex">
+            <Input placeholder="Enter new name..." className="w-full" />
+          </div>
           <DialogFooter>
             <DialogClose>Close</DialogClose>
           </DialogFooter>
