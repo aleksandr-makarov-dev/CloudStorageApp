@@ -1,4 +1,4 @@
-import type { QueryConfig } from "@/shared/lib/tanstack-query";
+import type { QueryConfig } from "@/shared/lib/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 import { listResourcesAsync } from "../api";
 import type { ListResourcesQueryParams } from "../types";

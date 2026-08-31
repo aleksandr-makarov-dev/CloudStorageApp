@@ -1,4 +1,4 @@
-import type { MutationConfig } from "@/shared/lib/tanstack-query";
+import type { MutationConfig } from "@/shared/lib/react-query";
 import { useMutation } from "@tanstack/react-query";
 import {
   completeUploadAsync,

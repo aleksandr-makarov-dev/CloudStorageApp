@@ -1,5 +1,5 @@
 import Axios, { AxiosError, isAxiosError } from "axios";
-import type { ApiError } from "./api-error";
+import { ApiError } from "./api-error";
 import type { ProblemDetails } from "./problem-details";
 
 export const apiClient = Axios.create({
