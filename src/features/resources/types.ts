@@ -1,3 +1,5 @@
+import { z } from "zod";
+
 export type UploadToBucketParams = {
   file: File;
   url: string;
@@ -28,6 +30,8 @@ export type Resource = {
 
 export type ListResourcesQueryParams = {};
 
-export type UpdateResourceRequest = {
-  name: string;
-};
+export const updateResourceInputSchema = z.object({
+  name: z.string().min(1).max(128),
+});
+
+export type UpdateResourceRequest = z.infer<typeof updateResourceInputSchema>;
