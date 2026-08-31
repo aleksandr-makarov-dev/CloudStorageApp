@@ -1,26 +1,30 @@
-import { createFileRoute } from "@tanstack/react-router";
-import Input from "../components/ui/input";
-import Button from "../components/ui/button";
-import { useRef, useState } from "react";
-import type { BaseUIEvent } from "@base-ui/react/types";
-import { useCreateUploadUrl } from "../hooks/use-create-upload-url";
-import { useUploadFile } from "../hooks/use-upload-file";
-import { useCompleteUpload } from "../hooks/use-complete-upload";
 import {
-  listResourcesQueryOptions,
+  useCreateUploadUrl,
+  useCompleteUpload,
+  useUpdateResource,
+  useUploadToBucket,
+} from "@/features/resources/hooks/mutations";
+import {
   useListResources,
-} from "../hooks/use-list-resources";
-import { formatDate } from "../lib/formate-date";
-import { formatBytes } from "../lib/format-bytes";
-import { useQueryClient } from "@tanstack/react-query";
+  listResourcesQueryOptions,
+} from "@/features/resources/hooks/queries";
+import type { Resource } from "@/features/resources/types";
+import { ApiError } from "@/shared/api/api-error";
+import { formatBytes } from "@/shared/lib/format-bytes";
+import { formatDate } from "@/shared/lib/format-date";
+import Button from "@/shared/ui/button";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeaderCell,
-  TableRow,
-} from "../components/ui/table";
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogRoot,
+  DialogTitle,
+  DialogDescription,
+  DialogClose,
+} from "@/shared/ui/dialog";
+import { Field } from "@/shared/ui/field";
+import { Form } from "@/shared/ui/form";
+import Input from "@/shared/ui/input";
 import {
   EllipsisHorizontalIcon,
   MenuContent,
@@ -28,31 +32,31 @@ import {
   MenuRoot,
   MenuSeparator,
   MenuTrigger,
-} from "../components/ui/menu";
-import { Menu as BaseMenu } from "@base-ui/react/menu";
-import React from "react";
+} from "@/shared/ui/menu";
 import {
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogRoot,
-  DialogTitle,
-} from "../components/ui/dialog";
-import { Dialog as BaseDialog } from "@base-ui/react/dialog";
-import { useUpdateResource } from "../hooks/use-update-resource";
+  Table,
+  TableHead,
+  TableRow,
+  TableHeaderCell,
+  TableBody,
+  TableCell,
+} from "@/shared/ui/table";
+import {
+  type BaseUIEvent,
+  Menu as BaseMenu,
+  Dialog as BaseDialog,
+} from "@base-ui/react";
+import { useQueryClient } from "@tanstack/react-query";
+import { createFileRoute } from "@tanstack/react-router";
+import React, { useRef } from "react";
 import z from "zod";
-import { Form } from "../components/ui/form";
-import { Field } from "../components/ui/field";
-import type { ResourceResponse } from "../models/resource-response";
 
 export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const actionMenuHandle = BaseMenu.createHandle<ResourceResponse>();
-const dialogHandle = BaseDialog.createHandle<ResourceResponse>();
+const actionMenuHandle = BaseMenu.createHandle<Resource>();
+const dialogHandle = BaseDialog.createHandle<Resource>();
 
 const schema = z.object({
   id: z.string().min(1).max(36),
@@ -64,7 +68,7 @@ const formId = "UPDATE_RESOURCE_FORM";
 function Index() {
   const queryClient = useQueryClient();
   const createUploadUrl = useCreateUploadUrl();
-  const uploadFile = useUploadFile();
+  const uploadFile = useUploadToBucket();
   const completeUpload = useCompleteUpload();
   const listResources = useListResources();
   const updateResource = useUpdateResource();
@@ -101,8 +105,19 @@ function Index() {
       queryClient.invalidateQueries({
         queryKey: listResourcesQueryOptions().queryKey,
       });
-    } catch (e) {
-      console.error("file upload failed:", JSON.stringify(e, null, 2));
+    } catch (error: unknown) {
+      if (error instanceof ApiError) {
+        console.error("file upload failed:", {
+          status: error.status,
+          title: error.title,
+          detail: error.detail,
+          traceId: error.traceId,
+          problemDetails: error.problemDetails,
+        });
+        // Optionally show a toast with error.detail ?? error.title
+      } else {
+        console.error("file upload failed (unknown):", error);
+      }
     }
   }
 
@@ -118,8 +133,18 @@ function Index() {
       });
 
       dialogHandle.close();
-    } catch (e) {
-      console.log("failed to update resource", JSON.stringify(e, null, 2));
+    } catch (error: unknown) {
+      if (error instanceof ApiError) {
+        console.error("failed to update resource:", {
+          status: error.status,
+          title: error.title,
+          detail: error.detail,
+          traceId: error.traceId,
+        });
+        // You can also surface this in the form (e.g. setError) if desired
+      } else {
+        console.error("failed to update resource (unknown):", error);
+      }
     }
   }
 

@@ -8,7 +8,7 @@ import {
 } from "react-hook-form";
 import { z, ZodType } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { cn } from "../../lib/cn";
+import { cn } from "../../shared/lib/cn";
 
 type FormProps<TFormValues extends FieldValues, Schema> = {
   onSubmit: SubmitHandler<TFormValues>;

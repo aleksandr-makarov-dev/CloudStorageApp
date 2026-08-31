@@ -1,6 +1,6 @@
 import type { ComponentProps } from "react";
 import { Menu as BaseMenu } from "@base-ui/react/menu";
-import { cn } from "../../lib/cn";
+import { cn } from "../lib/cn";
 
 export function MenuRoot<Payload>({
   children,

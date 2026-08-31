@@ -1,6 +1,6 @@
 import type { ComponentProps } from "react";
 import { Dialog as BaseDialog } from "@base-ui/react/dialog";
-import { cn } from "../../lib/cn";
+import { cn } from "../../shared/lib/cn";
 
 export function DialogRoot<Payload>({
   children,

@@ -6,7 +6,7 @@ import "./index.css";
 // Import the generated route tree
 import { routeTree } from "./routeTree.gen";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { queryConfig } from "./lib/tanstack-query";
+import { queryConfig } from "./shared/lib/tanstack-query";
 
 const queryClient = new QueryClient({
   defaultOptions: queryConfig,
