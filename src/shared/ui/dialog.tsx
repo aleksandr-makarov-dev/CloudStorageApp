@@ -92,3 +92,11 @@ export function DialogClose({
     />
   );
 }
+
+export function createDialogHandle<Payload>() {
+  return BaseDialog.createHandle<Payload>();
+}
+
+export type DialogHanle<Payload> = ReturnType<
+  typeof createDialogHandle<Payload>
+>;

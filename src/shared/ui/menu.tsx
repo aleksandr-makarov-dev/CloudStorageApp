@@ -90,3 +90,9 @@ export function EllipsisHorizontalIcon(props: React.ComponentProps<"svg">) {
     </svg>
   );
 }
+
+export function createMenuHandle<Payload>() {
+  return BaseMenu.createHandle<Payload>();
+}
+
+export type MenuHandle<Payload> = ReturnType<typeof createMenuHandle<Payload>>;
