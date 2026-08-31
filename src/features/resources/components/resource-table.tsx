@@ -47,6 +47,13 @@ export function ResourceTable() {
               </TableCell>
             </TableRow>
           )}
+          {listResources.isError && (
+            <TableRow>
+              <TableCell colSpan={6} className="text-center">
+                {listResources.error.message}
+              </TableCell>
+            </TableRow>
+          )}
           {listResources.data?.map((row) => (
             <TableRow key={row.id}>
               <TableCell>{row.name}</TableCell>

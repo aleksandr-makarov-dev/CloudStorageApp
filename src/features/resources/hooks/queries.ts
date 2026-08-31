@@ -1,7 +1,8 @@
 import type { QueryConfig } from "@/shared/lib/react-query";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 import { listResourcesAsync } from "../api";
-import type { ListResourcesQueryParams } from "../types";
+import { type Resource, type ListResourcesQueryParams } from "../types";
+import type { ApiError } from "@/shared/api/api-error";
 
 type UseListResourcesOptions = {
   query?: ListResourcesQueryParams;
@@ -10,7 +11,7 @@ type UseListResourcesOptions = {
 export const listResourcesQueryOptions = (
   query: ListResourcesQueryParams = {},
 ) =>
-  queryOptions({
+  queryOptions<Resource[], ApiError>({
     queryKey: ["resources", query],
     queryFn: () => listResourcesAsync(query),
   });

@@ -8,7 +8,6 @@ export class ApiError extends Error {
   readonly instance?: string;
   readonly traceId?: string;
   readonly timestamp?: string;
-  readonly problemDetails: ProblemDetails;
 
   constructor(
     problem: ProblemDetails,
@@ -25,7 +24,6 @@ export class ApiError extends Error {
     this.instance = problem.instance;
     this.traceId = problem.traceId;
     this.timestamp = problem.timestamp;
-    this.problemDetails = problem;
 
     // Maintains proper prototype chain
     Object.setPrototypeOf(this, ApiError.prototype);
