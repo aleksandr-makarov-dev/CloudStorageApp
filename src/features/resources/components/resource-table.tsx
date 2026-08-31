@@ -19,6 +19,7 @@ import { ResourceActionMenu } from "./resource-action-menu";
 import { UpdateResourceDialog } from "./update-resource-dialog";
 import { createDialogHandle } from "@/shared/ui/dialog";
 import { useListResources } from "../hooks/queries";
+import Button from "@/shared/ui/button";
 
 const menuActionHandle = createMenuHandle<Resource>();
 const updateDialogHandle = createDialogHandle<Resource>();
@@ -28,6 +29,10 @@ export function ResourceTable() {
 
   return (
     <React.Fragment>
+      <div className="flex flex-row gap-x-3">
+        <Button variant="secondary">Upload File</Button>
+        <Button variant="secondary">Create Folder</Button>
+      </div>
       <Table className="w-full max-w-7xl">
         <TableHead>
           <TableRow>
