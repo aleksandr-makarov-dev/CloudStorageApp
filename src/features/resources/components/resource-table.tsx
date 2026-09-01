@@ -21,6 +21,7 @@ import { createDialogHandle } from "@/shared/ui/dialog";
 import { useListResources } from "../hooks/queries";
 import Button from "@/shared/ui/button";
 import { CreateFolderDialog } from "./create-folder-dialog";
+import { UploadFileButton } from "./upload-file-button";
 
 const menuActionHandle = createMenuHandle<Resource>();
 const updateResourceDialogHandle = createDialogHandle<Resource>();
@@ -32,7 +33,7 @@ export function ResourceTable() {
   return (
     <React.Fragment>
       <div className="flex flex-row gap-x-3">
-        <Button variant="secondary">Upload File</Button>
+        <UploadFileButton variant="primary">Upload File</UploadFileButton>
         <Button
           variant="secondary"
           onClick={() => createFolderDialogHandle.open(null)}

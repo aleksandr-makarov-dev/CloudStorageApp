@@ -6,11 +6,13 @@ export type UploadToBucketParams = {
   formFields: Record<string, string>;
 };
 
-export type CreateUploadUrlRequest = {
-  name: string;
-  contentType: string;
-  contentLength: number;
-};
+export const createUploadUrlInputSchema = z.object({
+  name: z.string().min(1).max(128),
+  contentType: z.string().min(1).max(32),
+  contentLength: z.coerce.number().min(1),
+});
+
+export type CreateUploadUrlRequest = z.infer<typeof createUploadUrlInputSchema>;
 
 export type CreateUploadUrl = {
   id: string;
