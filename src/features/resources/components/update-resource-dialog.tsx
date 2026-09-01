@@ -13,7 +13,6 @@ import { UpdateResourceForm } from "./update-resource-form";
 import { useUpdateResource } from "../hooks/mutations";
 import { useQueryClient } from "@tanstack/react-query";
 import { useToastManager } from "@/shared/ui/toast";
-import { ApiError } from "@/shared/api/api-error";
 import { listResourcesQueryOptions } from "../hooks/queries";
 
 type UpdateResourceDialogProps = {
@@ -28,37 +27,31 @@ export function UpdateResourceDialog({ handle }: UpdateResourceDialogProps) {
   const updateResource = useUpdateResource();
 
   async function handleSubmit(id: string, data: UpdateResourceRequest) {
-    try {
-      await updateResource.mutateAsync({
-        id,
-        request: data,
-      });
+    updateResource.mutate(
+      { id: id, request: data },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({
+            queryKey: listResourcesQueryOptions().queryKey,
+          });
 
-      queryClient.invalidateQueries({
-        queryKey: listResourcesQueryOptions().queryKey,
-      });
+          toastManager.add({
+            title: "Resource updated",
+            description: "The resource was successfully updated.",
+          });
 
-      toastManager.add({
-        title: "Resource updated",
-        description: "The resource was successfully updated.",
-      });
+          handle.close();
+        },
+        onError: (error) => {
+          console.error("UpdateResourceDialog error:", error);
 
-      handle.close();
-    } catch (error) {
-      if (error instanceof ApiError) {
-        toastManager.add({
-          title: error.title,
-          description: error.message,
-        });
-      } else {
-        console.error("UpdateResourceDialog error:", error);
-
-        toastManager.add({
-          title: "Failed to update resource",
-          description: "Something went wrong. Please try again.",
-        });
-      }
-    }
+          toastManager.add({
+            title: error.title,
+            description: error.message,
+          });
+        },
+      },
+    );
   }
 
   return (

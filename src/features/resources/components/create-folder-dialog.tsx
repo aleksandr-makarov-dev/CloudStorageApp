@@ -14,7 +14,6 @@ import type { CreateFolderRequest } from "../types";
 import { useToastManager } from "@/shared/ui/toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { listResourcesQueryOptions } from "../hooks/queries";
-import { ApiError } from "@/shared/api/api-error";
 
 type CreateFolderDialogProps = {
   handle: DialogHandle;
@@ -27,35 +26,29 @@ export function CreateFolderDialog({ handle }: CreateFolderDialogProps) {
   const queryClient = useQueryClient();
   const createFolder = useCreateFolder();
 
-  async function handleSubmit(data: CreateFolderRequest) {
-    try {
-      await createFolder.mutateAsync(data);
+  function handleSubmit(data: CreateFolderRequest) {
+    createFolder.mutate(data, {
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: listResourcesQueryOptions().queryKey,
+        });
 
-      queryClient.invalidateQueries({
-        queryKey: listResourcesQueryOptions().queryKey,
-      });
+        toastManager.add({
+          title: "Folder created",
+          description: "The folder was successfully created.",
+        });
 
-      toastManager.add({
-        title: "Folder created",
-        description: "The folder was successfully created.",
-      });
+        handle.close();
+      },
+      onError: (error) => {
+        console.error("CreateFolderDialog error:", error);
 
-      handle.close();
-    } catch (error) {
-      if (error instanceof ApiError) {
         toastManager.add({
           title: error.title,
           description: error.message,
         });
-      } else {
-        console.error("CreateFolderDialog error:", error);
-
-        toastManager.add({
-          title: "Failed to create folder",
-          description: "Something went wrong. Please try again.",
-        });
-      }
-    }
+      },
+    });
   }
 
   return (
