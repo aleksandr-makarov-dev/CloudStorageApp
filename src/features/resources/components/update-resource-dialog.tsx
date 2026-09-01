@@ -43,7 +43,10 @@ export function UpdateResourceDialog({ handle }: UpdateResourceDialogProps) {
           handle.close();
         },
         onError: (error) => {
-          console.error("UpdateResourceDialog error:", error);
+          console.error(
+            "UpdateResourceDialog:",
+            JSON.stringify(error, null, 2),
+          );
 
           toastManager.add({
             title: error.title,

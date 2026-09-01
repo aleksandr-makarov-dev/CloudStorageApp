@@ -14,6 +14,7 @@ import type { CreateFolderRequest } from "../types";
 import { useToastManager } from "@/shared/ui/toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { listResourcesQueryOptions } from "../hooks/queries";
+import { json } from "zod";
 
 type CreateFolderDialogProps = {
   handle: DialogHandle;
@@ -41,7 +42,7 @@ export function CreateFolderDialog({ handle }: CreateFolderDialogProps) {
         handle.close();
       },
       onError: (error) => {
-        console.error("CreateFolderDialog error:", error);
+        console.error("CreateFolderDialog:", JSON.stringify(error, null, 2));
 
         toastManager.add({
           title: error.title,
