@@ -14,7 +14,6 @@ import {
   TableCell,
 } from "@/shared/ui/table";
 import type { Resource } from "../types";
-import React from "react";
 import { ResourceActionMenu } from "./resource-action-menu";
 import { UpdateResourceDialog } from "./update-resource-dialog";
 import { createDialogHandle } from "@/shared/ui/dialog";
@@ -33,7 +32,7 @@ export function ResourceTable() {
   const listResources = useListResources();
 
   return (
-    <React.Fragment>
+    <div className="space-y-3">
       <div className="flex flex-row gap-x-3">
         <UploadFileButton variant="primary">
           {t("ResourceTable.UploadFile")}
@@ -126,6 +125,6 @@ export function ResourceTable() {
 
       <UpdateResourceDialog handle={updateResourceDialogHandle} />
       <CreateFolderDialog handle={createFolderDialogHandle} />
-    </React.Fragment>
+    </div>
   );
 }

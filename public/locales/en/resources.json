@@ -46,5 +46,9 @@
     "SuccessDescription": "File was successfully uploaded.",
     "ErrorTitle": "Upload failed",
     "ErrorDescription": "Something went wrong. Please try again."
+  },
+  "Sidebar": {
+    "MyDrive": "My Drive",
+    "Trash": "Trash"
   }
 }
