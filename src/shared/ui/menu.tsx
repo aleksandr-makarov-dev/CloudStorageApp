@@ -95,4 +95,6 @@ export function createMenuHandle<Payload>() {
   return BaseMenu.createHandle<Payload>();
 }
 
-export type MenuHandle<Payload> = ReturnType<typeof createMenuHandle<Payload>>;
+export type MenuHandle<Payload = unknown> = ReturnType<
+  typeof createMenuHandle<Payload>
+>;
