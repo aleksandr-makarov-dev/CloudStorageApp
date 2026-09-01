@@ -48,10 +48,10 @@ export function CreateFolderDialog({ handle }: CreateFolderDialogProps) {
           description: error.message,
         });
       } else {
-        console.error("UpdateResourceDialog error:", error);
+        console.error("CreateFolderDialog error:", error);
 
         toastManager.add({
-          title: "Failed to update resource",
+          title: "Failed to create folder",
           description: "Something went wrong. Please try again.",
         });
       }
