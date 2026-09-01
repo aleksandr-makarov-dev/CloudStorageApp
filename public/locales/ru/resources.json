@@ -1,0 +1,47 @@
+{
+  "ResourceTable": {
+    "Name": "Название",
+    "Type": "Тип",
+    "ContentType": "Тип содержимого",
+    "ContentLength": "Размер",
+    "CreatedAt": "Создано",
+    "LastModifiedAt": "Изменено",
+    "UploadFile": "Загрузить файл",
+    "CreateFolder": "Создать папку",
+    "LoadingResources": "Загрузка ресурсов...",
+    "Folder": "Папка",
+    "File": "Файл"
+  },
+  "ResourceActionMenu": {
+    "Rename": "Переименовать",
+    "Copy": "Копировать",
+    "Move": "Переместить",
+    "Delete": "Удалить"
+  },
+  "UpdateResourceDialog": {
+    "Title": "Изменение ресурса",
+    "Saving": "Сохранение...",
+    "SaveChanges": "Сохранить изменения",
+    "Cancel": "Отмена",
+    "SuccessTitle": "Ресурс изменён",
+    "SuccessDescription": "Ресурс успешно изменён."
+  },
+  "UpdateResourceForm": {
+    "Name": "Название"
+  },
+  "CreateFolderDialog": {
+    "Title": "Создание папки",
+    "Create": "Создать",
+    "Cancel": "Отмена",
+    "SuccessTitle": "Папка создана",
+    "SuccessDescription": "Папка успешно создана."
+  },
+  "UploadFileButton": {
+    "LoadingTitle": "Загрузка файла",
+    "LoadingDescription": "Пожалуйста, подождите, пока файл загружается.",
+    "SuccessTitle": "Файл загружен",
+    "SuccessDescription": "Файл успешно загружен.",
+    "ErrorTitle": "Ошибка загрузки",
+    "ErrorDescription": "Что-то пошло не так. Попробуйте ещё раз."
+  }
+}

@@ -22,45 +22,57 @@ import { useListResources } from "../hooks/queries";
 import Button from "@/shared/ui/button";
 import { CreateFolderDialog } from "./create-folder-dialog";
 import { UploadFileButton } from "./upload-file-button";
+import { useTranslation } from "react-i18next";
 
 const menuActionHandle = createMenuHandle<Resource>();
 const updateResourceDialogHandle = createDialogHandle<Resource>();
 const createFolderDialogHandle = createDialogHandle();
 
 export function ResourceTable() {
+  const { t } = useTranslation("resources");
   const listResources = useListResources();
 
   return (
     <React.Fragment>
       <div className="flex flex-row gap-x-3">
-        <UploadFileButton variant="primary">Upload File</UploadFileButton>
+        <UploadFileButton variant="primary">
+          {t("ResourceTable.UploadFile")}
+        </UploadFileButton>
+
         <Button
           variant="secondary"
           onClick={() => createFolderDialogHandle.open(null)}
         >
-          Create Folder
+          {t("ResourceTable.CreateFolder")}
         </Button>
       </div>
+
       <Table className="w-full max-w-7xl">
         <TableHead>
           <TableRow>
-            <TableHeaderCell>Name</TableHeaderCell>
-            <TableHeaderCell>Type</TableHeaderCell>
-            <TableHeaderCell>Content Type</TableHeaderCell>
-            <TableHeaderCell>Content Length</TableHeaderCell>
-            <TableHeaderCell>Created At</TableHeaderCell>
-            <TableHeaderCell>Last Modified At</TableHeaderCell>
+            <TableHeaderCell>{t("ResourceTable.Name")}</TableHeaderCell>
+            <TableHeaderCell>{t("ResourceTable.Type")}</TableHeaderCell>
+            <TableHeaderCell>{t("ResourceTable.ContentType")}</TableHeaderCell>
+            <TableHeaderCell>
+              {t("ResourceTable.ContentLength")}
+            </TableHeaderCell>
+            <TableHeaderCell>{t("ResourceTable.CreatedAt")}</TableHeaderCell>
+            <TableHeaderCell>
+              {t("ResourceTable.LastModifiedAt")}
+            </TableHeaderCell>
             <TableHeaderCell className="w-14" />
           </TableRow>
         </TableHead>
+
         <TableBody>
           {listResources.isLoading && (
             <TableRow>
               <TableCell colSpan={6} className="text-center">
-                Loading resources...
+                {t("ResourceTable.LoadingResources")}
               </TableCell>
             </TableRow>
           )}
+
           {listResources.isError && (
             <TableRow>
               <TableCell colSpan={6} className="text-center">
@@ -68,18 +80,29 @@ export function ResourceTable() {
               </TableCell>
             </TableRow>
           )}
+
           {listResources.data?.map((row) => (
             <TableRow key={row.id}>
               <TableCell>{row.name}</TableCell>
-              <TableCell>{row.isFolder ? "Folder" : "File"}</TableCell>
+
+              <TableCell>
+                {row.isFolder
+                  ? t("ResourceTable.Folder")
+                  : t("ResourceTable.File")}
+              </TableCell>
+
               <TableCell>{row.contentType}</TableCell>
+
               <TableCell className="text-right">
                 {row.contentLength && formatBytes(row.contentLength)}
               </TableCell>
+
               <TableCell>{formatDate(row.createdAtUtc)}</TableCell>
+
               <TableCell>
                 {row.lastModifiedAtUtc && formatDate(row.lastModifiedAtUtc)}
               </TableCell>
+
               <TableCell className="w-14">
                 <MenuTrigger
                   className="size-8 border-0 p-0"
@@ -93,12 +116,14 @@ export function ResourceTable() {
           ))}
         </TableBody>
       </Table>
+
       <ResourceActionMenu
         handle={menuActionHandle}
         onUpdateResourceClick={(resource) =>
           updateResourceDialogHandle.openWithPayload(resource)
         }
       />
+
       <UpdateResourceDialog handle={updateResourceDialogHandle} />
       <CreateFolderDialog handle={createFolderDialogHandle} />
     </React.Fragment>

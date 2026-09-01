@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, type SubmitHandler } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import {
   type UpdateResourceRequest,
   updateResourceInputSchema,
@@ -18,9 +19,11 @@ export function UpdateResourceForm({
   defaultValues,
   onSubmit,
 }: UpdateResourceFormProps) {
+  const { t } = useTranslation("resources");
+
   const form = useForm<UpdateResourceRequest>({
     resolver: zodResolver(updateResourceInputSchema),
-    defaultValues: defaultValues,
+    defaultValues,
   });
 
   return (
@@ -32,7 +35,7 @@ export function UpdateResourceForm({
       <Field
         control={form.control}
         name="name"
-        label="Name"
+        label={t("UpdateResourceForm.Name")}
         render={({ field }) => <Input {...field} />}
       />
     </form>

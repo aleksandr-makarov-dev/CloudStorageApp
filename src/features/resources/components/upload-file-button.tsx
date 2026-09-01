@@ -1,9 +1,5 @@
 import Button from "@/shared/ui/button";
-import React, {
-  useRef,
-  type ComponentProps,
-  type PropsWithChildren,
-} from "react";
+import React, { useRef, type ComponentProps } from "react";
 import {
   useCompleteUpload,
   useCreateUploadUrl,
@@ -17,6 +13,7 @@ import { useToastManager } from "@/shared/ui/toast";
 import { ApiError } from "@/shared/api/api-error";
 import { useQueryClient } from "@tanstack/react-query";
 import { listResourcesQueryOptions } from "../hooks/queries";
+import { useTranslation } from "react-i18next";
 
 type UploadFileButtonProps = Pick<
   ComponentProps<typeof Button>,
@@ -24,6 +21,7 @@ type UploadFileButtonProps = Pick<
 >;
 
 export function UploadFileButton(props: UploadFileButtonProps) {
+  const { t } = useTranslation("resources");
   const inputRef = useRef<HTMLInputElement>(null);
   const toastManager = useToastManager();
   const queryClient = useQueryClient();
@@ -71,12 +69,12 @@ export function UploadFileButton(props: UploadFileButtonProps) {
 
     toastManager.promise(promise, {
       loading: {
-        title: "Uploading file",
-        description: "Please wait while the file is being uploaded.",
+        title: t("UploadFileButton.LoadingTitle"),
+        description: t("UploadFileButton.LoadingDescription"),
       },
       success: () => ({
-        title: "File uploaded",
-        description: "File was successfully uploaded.",
+        title: t("UploadFileButton.SuccessTitle"),
+        description: t("UploadFileButton.SuccessDescription"),
       }),
       error: (error) => {
         if (error instanceof ApiError) {
@@ -89,8 +87,8 @@ export function UploadFileButton(props: UploadFileButtonProps) {
         console.error("UploadFileButton:", error);
 
         return {
-          title: "Upload failed",
-          description: "Something went wrong. Please try again.",
+          title: t("UploadFileButton.ErrorTitle"),
+          description: t("UploadFileButton.ErrorDescription"),
         };
       },
     });

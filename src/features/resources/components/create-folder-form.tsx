@@ -1,8 +1,9 @@
-import { useForm, type SubmitHandler } from "react-hook-form";
-import { createFolderInputSchema, type CreateFolderRequest } from "../types";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import Input from "@/shared/ui/input";
 import { Field } from "@/shared/ui/field";
+import { createFolderInputSchema, type CreateFolderRequest } from "../types";
 
 type CreateFolderFormProps = {
   formId: string;
@@ -15,9 +16,11 @@ export function CreateFolderForm({
   defaultValues,
   onSubmit,
 }: CreateFolderFormProps) {
+  const { t } = useTranslation("resources");
+
   const form = useForm<CreateFolderRequest>({
     resolver: zodResolver(createFolderInputSchema),
-    defaultValues: defaultValues,
+    defaultValues,
   });
 
   return (
@@ -29,7 +32,7 @@ export function CreateFolderForm({
       <Field
         control={form.control}
         name="name"
-        label="Name"
+        label={t("CreateFolderForm.Name")}
         render={({ field }) => <Input {...field} />}
       />
     </form>

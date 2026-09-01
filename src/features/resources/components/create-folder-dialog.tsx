@@ -14,7 +14,7 @@ import type { CreateFolderRequest } from "../types";
 import { useToastManager } from "@/shared/ui/toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { listResourcesQueryOptions } from "../hooks/queries";
-import { json } from "zod";
+import { useTranslation } from "react-i18next";
 
 type CreateFolderDialogProps = {
   handle: DialogHandle;
@@ -23,6 +23,8 @@ type CreateFolderDialogProps = {
 const formId = "CREATE_FOLDER_FORM";
 
 export function CreateFolderDialog({ handle }: CreateFolderDialogProps) {
+  const { t } = useTranslation("resources");
+
   const toastManager = useToastManager();
   const queryClient = useQueryClient();
   const createFolder = useCreateFolder();
@@ -35,8 +37,8 @@ export function CreateFolderDialog({ handle }: CreateFolderDialogProps) {
         });
 
         toastManager.add({
-          title: "Folder created",
-          description: "The folder was successfully created.",
+          title: t("CreateFolderDialog.SuccessTitle"),
+          description: t("CreateFolderDialog.SuccessDescription"),
         });
 
         handle.close();
@@ -56,18 +58,21 @@ export function CreateFolderDialog({ handle }: CreateFolderDialogProps) {
     <DialogRoot handle={handle}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create folder</DialogTitle>
+          <DialogTitle>{t("CreateFolderDialog.Title")}</DialogTitle>
         </DialogHeader>
+
         <CreateFolderForm
           formId={formId}
           defaultValues={{ name: "" }}
           onSubmit={handleSubmit}
         />
+
         <DialogFooter>
           <Button form={formId} type="submit">
-            Create
+            {t("CreateFolderDialog.Create")}
           </Button>
-          <DialogClose>Cancel</DialogClose>
+
+          <DialogClose>{t("CreateFolderDialog.Cancel")}</DialogClose>
         </DialogFooter>
       </DialogContent>
     </DialogRoot>

@@ -1,0 +1,47 @@
+{
+  "ResourceTable": {
+    "Name": "Name",
+    "Type": "Type",
+    "ContentType": "Content Type",
+    "ContentLength": "Content Length",
+    "CreatedAt": "Created At",
+    "LastModifiedAt": "Last Modified At",
+    "UploadFile": "Upload File",
+    "CreateFolder": "Create Folder",
+    "LoadingResources": "Loading resources...",
+    "Folder": "Folder",
+    "File": "File"
+  },
+  "ResourceActionMenu": {
+    "Rename": "Rename",
+    "Copy": "Copy",
+    "Move": "Move",
+    "Delete": "Delete"
+  },
+  "UpdateResourceDialog": {
+    "Title": "Update resource",
+    "Saving": "Saving...",
+    "SaveChanges": "Save Changes",
+    "Cancel": "Cancel",
+    "SuccessTitle": "Resource updated",
+    "SuccessDescription": "The resource was successfully updated."
+  },
+  "UpdateResourceForm": {
+    "Name": "Name"
+  },
+  "CreateFolderDialog": {
+    "Title": "Create folder",
+    "Create": "Create",
+    "Cancel": "Cancel",
+    "SuccessTitle": "Folder created",
+    "SuccessDescription": "The folder was successfully created."
+  },
+  "UploadFileButton": {
+    "LoadingTitle": "Uploading file",
+    "LoadingDescription": "Please wait while the file is being uploaded.",
+    "SuccessTitle": "File uploaded",
+    "SuccessDescription": "File was successfully uploaded.",
+    "ErrorTitle": "Upload failed",
+    "ErrorDescription": "Something went wrong. Please try again."
+  }
+}

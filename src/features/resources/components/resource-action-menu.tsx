@@ -6,6 +6,7 @@ import {
   type MenuHandle,
 } from "@/shared/ui/menu";
 import type { Resource } from "../types";
+import { useTranslation } from "react-i18next";
 
 type ResourceActionMenuProps = {
   handle: MenuHandle<Resource>;
@@ -16,6 +17,8 @@ export function ResourceActionMenu({
   handle,
   onUpdateResourceClick,
 }: ResourceActionMenuProps) {
+  const { t } = useTranslation("resources");
+
   return (
     <MenuRoot handle={handle}>
       {({ payload }) => {
@@ -24,12 +27,12 @@ export function ResourceActionMenu({
         return (
           <MenuContent>
             <MenuItem onClick={() => onUpdateResourceClick(payload)}>
-              Update
+              {t("ResourceActionMenu.Rename")}
             </MenuItem>
-            <MenuItem>Duplicate</MenuItem>
-            <MenuItem>Move to folder</MenuItem>
+            <MenuItem>{t("ResourceActionMenu.Copy")}</MenuItem>
+            <MenuItem>{t("ResourceActionMenu.Move")}</MenuItem>
             <MenuSeparator />
-            <MenuItem>Delete</MenuItem>
+            <MenuItem>{t("ResourceActionMenu.Delete")}</MenuItem>
           </MenuContent>
         );
       }}

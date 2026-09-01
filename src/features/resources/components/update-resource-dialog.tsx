@@ -14,6 +14,7 @@ import { useUpdateResource } from "../hooks/mutations";
 import { useQueryClient } from "@tanstack/react-query";
 import { useToastManager } from "@/shared/ui/toast";
 import { listResourcesQueryOptions } from "../hooks/queries";
+import { useTranslation } from "react-i18next";
 
 type UpdateResourceDialogProps = {
   handle: DialogHandle<Resource>;
@@ -22,13 +23,15 @@ type UpdateResourceDialogProps = {
 const formId = "UPDATE_RESOURCE_FORM";
 
 export function UpdateResourceDialog({ handle }: UpdateResourceDialogProps) {
+  const { t } = useTranslation("resources");
+
   const toastManager = useToastManager();
   const queryClient = useQueryClient();
   const updateResource = useUpdateResource();
 
   async function handleSubmit(id: string, data: UpdateResourceRequest) {
     updateResource.mutate(
-      { id: id, request: data },
+      { id, request: data },
       {
         onSuccess: () => {
           queryClient.invalidateQueries({
@@ -36,8 +39,8 @@ export function UpdateResourceDialog({ handle }: UpdateResourceDialogProps) {
           });
 
           toastManager.add({
-            title: "Resource updated",
-            description: "The resource was successfully updated.",
+            title: t("UpdateResourceDialog.SuccessTitle"),
+            description: t("UpdateResourceDialog.SuccessDescription"),
           });
 
           handle.close();
@@ -65,22 +68,27 @@ export function UpdateResourceDialog({ handle }: UpdateResourceDialogProps) {
         return (
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Update resource</DialogTitle>
+              <DialogTitle>{t("UpdateResourceDialog.Title")}</DialogTitle>
             </DialogHeader>
+
             <UpdateResourceForm
               formId={formId}
               defaultValues={{ name: payload.name }}
               onSubmit={(data) => handleSubmit(payload.id, data)}
             />
+
             <DialogFooter>
               <Button
                 type="submit"
                 form={formId}
                 disabled={updateResource.isPending}
               >
-                {updateResource.isPending ? "Saving..." : "Save Changes"}
+                {updateResource.isPending
+                  ? t("UpdateResourceDialog.Saving")
+                  : t("UpdateResourceDialog.SaveChanges")}
               </Button>
-              <DialogClose>Cancel</DialogClose>
+
+              <DialogClose>{t("UpdateResourceDialog.Cancel")}</DialogClose>
             </DialogFooter>
           </DialogContent>
         );

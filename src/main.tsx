@@ -8,6 +8,7 @@ import { routeTree } from "./routeTree.gen";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { queryConfig } from "./shared/lib/react-query";
 import { ToastProvider } from "./shared/ui/toast";
+import "@/shared/lib/i18n";
 
 const queryClient = new QueryClient({
   defaultOptions: queryConfig,
