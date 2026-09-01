@@ -36,6 +36,9 @@
     "SuccessTitle": "Папка создана",
     "SuccessDescription": "Папка успешно создана."
   },
+  "CreateFolderForm": {
+    "Name": "Название"
+  },
   "UploadFileButton": {
     "LoadingTitle": "Загрузка файла",
     "LoadingDescription": "Пожалуйста, подождите, пока файл загружается.",

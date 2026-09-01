@@ -36,6 +36,9 @@
     "SuccessTitle": "Folder created",
     "SuccessDescription": "The folder was successfully created."
   },
+  "CreateFolderForm": {
+    "Name": "Name"
+  },
   "UploadFileButton": {
     "LoadingTitle": "Uploading file",
     "LoadingDescription": "Please wait while the file is being uploaded.",
