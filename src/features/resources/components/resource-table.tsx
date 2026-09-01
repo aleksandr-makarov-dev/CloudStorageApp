@@ -20,9 +20,11 @@ import { UpdateResourceDialog } from "./update-resource-dialog";
 import { createDialogHandle } from "@/shared/ui/dialog";
 import { useListResources } from "../hooks/queries";
 import Button from "@/shared/ui/button";
+import { CreateFolderDialog } from "./create-folder-dialog";
 
 const menuActionHandle = createMenuHandle<Resource>();
-const updateDialogHandle = createDialogHandle<Resource>();
+const updateResourceDialogHandle = createDialogHandle<Resource>();
+const createFolderDialogHandle = createDialogHandle();
 
 export function ResourceTable() {
   const listResources = useListResources();
@@ -31,17 +33,23 @@ export function ResourceTable() {
     <React.Fragment>
       <div className="flex flex-row gap-x-3">
         <Button variant="secondary">Upload File</Button>
-        <Button variant="secondary">Create Folder</Button>
+        <Button
+          variant="secondary"
+          onClick={() => createFolderDialogHandle.open(null)}
+        >
+          Create Folder
+        </Button>
       </div>
       <Table className="w-full max-w-7xl">
         <TableHead>
           <TableRow>
             <TableHeaderCell>Name</TableHeaderCell>
+            <TableHeaderCell>Type</TableHeaderCell>
             <TableHeaderCell>Content Type</TableHeaderCell>
             <TableHeaderCell>Content Length</TableHeaderCell>
             <TableHeaderCell>Created At</TableHeaderCell>
             <TableHeaderCell>Last Modified At</TableHeaderCell>
-            <TableHeaderCell />
+            <TableHeaderCell className="w-14" />
           </TableRow>
         </TableHead>
         <TableBody>
@@ -62,15 +70,16 @@ export function ResourceTable() {
           {listResources.data?.map((row) => (
             <TableRow key={row.id}>
               <TableCell>{row.name}</TableCell>
+              <TableCell>{row.isFolder ? "Folder" : "File"}</TableCell>
               <TableCell>{row.contentType}</TableCell>
               <TableCell className="text-right">
-                {formatBytes(row.contentLength)}
+                {row.contentLength && formatBytes(row.contentLength)}
               </TableCell>
               <TableCell>{formatDate(row.createdAtUtc)}</TableCell>
               <TableCell>
                 {row.lastModifiedAtUtc && formatDate(row.lastModifiedAtUtc)}
               </TableCell>
-              <TableCell>
+              <TableCell className="w-14">
                 <MenuTrigger
                   className="size-8 border-0 p-0"
                   handle={menuActionHandle}
@@ -86,10 +95,11 @@ export function ResourceTable() {
       <ResourceActionMenu
         handle={menuActionHandle}
         onUpdateResourceClick={(resource) =>
-          updateDialogHandle.openWithPayload(resource)
+          updateResourceDialogHandle.openWithPayload(resource)
         }
       />
-      <UpdateResourceDialog handle={updateDialogHandle} />
+      <UpdateResourceDialog handle={updateResourceDialogHandle} />
+      <CreateFolderDialog handle={createFolderDialogHandle} />
     </React.Fragment>
   );
 }

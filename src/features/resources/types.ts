@@ -22,8 +22,9 @@ export type CreateUploadUrl = {
 export type Resource = {
   id: string;
   name: string;
-  contentType: string;
-  contentLength: bigint;
+  contentType?: string;
+  contentLength?: bigint;
+  isFolder: boolean;
   createdAtUtc: string;
   lastModifiedAtUtc?: string;
 };
@@ -38,3 +39,9 @@ export const updateResourceInputSchema = z.object({
 });
 
 export type UpdateResourceRequest = z.infer<typeof updateResourceInputSchema>;
+
+export const createFolderInputSchema = z.object({
+  name: z.string().min(1).max(128),
+});
+
+export type CreateFolderRequest = z.infer<typeof createFolderInputSchema>;

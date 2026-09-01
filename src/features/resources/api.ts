@@ -1,5 +1,6 @@
 import { apiClient } from "@/shared/api/api-client";
 import type {
+  CreateFolderRequest,
   CreateUploadUrl,
   CreateUploadUrlRequest,
   ListResourcesQueryParams,
@@ -37,4 +38,10 @@ export async function updateResourceAsync({
   request: UpdateResourceRequest;
 }): Promise<Resource> {
   return apiClient.put(`${baseUrl}/${id}`, request);
+}
+
+export async function createFolderAsync(
+  request: CreateFolderRequest,
+): Promise<Resource> {
+  return apiClient.post(`${baseUrl}/folder`, request);
 }

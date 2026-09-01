@@ -6,7 +6,7 @@ import {
   DialogHeader,
   DialogRoot,
   DialogTitle,
-  type DialogHanle,
+  type DialogHandle,
 } from "@/shared/ui/dialog";
 import { type Resource, type UpdateResourceRequest } from "../types";
 import { UpdateResourceForm } from "./update-resource-form";
@@ -17,7 +17,7 @@ import { ApiError } from "@/shared/api/api-error";
 import { listResourcesQueryOptions } from "../hooks/queries";
 
 type UpdateResourceDialogProps = {
-  handle: DialogHanle<Resource>;
+  handle: DialogHandle<Resource>;
 };
 
 const formId = "UPDATE_RESOURCE_FORM";
@@ -34,17 +34,13 @@ export function UpdateResourceDialog({ handle }: UpdateResourceDialogProps) {
         request: data,
       });
 
-      await queryClient.invalidateQueries({
-        queryKey: ["resources"],
+      queryClient.invalidateQueries({
+        queryKey: listResourcesQueryOptions().queryKey,
       });
 
       toastManager.add({
         title: "Resource updated",
         description: "The resource was successfully updated.",
-      });
-
-      queryClient.invalidateQueries({
-        queryKey: listResourcesQueryOptions().queryKey,
       });
 
       handle.close();

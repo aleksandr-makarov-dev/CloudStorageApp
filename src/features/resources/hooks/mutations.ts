@@ -2,6 +2,7 @@ import type { MutationConfig } from "@/shared/lib/react-query";
 import { useMutation } from "@tanstack/react-query";
 import {
   completeUploadAsync,
+  createFolderAsync,
   createUploadUrlAsync,
   updateResourceAsync,
 } from "../api";
@@ -34,5 +35,14 @@ export function useUpdateResource(options?: UseUpdateResourceOptions) {
   return useMutation({
     ...options,
     mutationFn: updateResourceAsync,
+  });
+}
+
+type UseCreateFolderOptions = MutationConfig<typeof createFolderAsync>;
+
+export function useCreateFolder(options?: UseCreateFolderOptions) {
+  return useMutation({
+    ...options,
+    mutationFn: createFolderAsync,
   });
 }
