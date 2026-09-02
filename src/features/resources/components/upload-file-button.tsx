@@ -18,9 +18,14 @@ import { useTranslation } from "react-i18next";
 type UploadFileButtonProps = Pick<
   ComponentProps<typeof Button>,
   "children" | "variant" | "className"
->;
+> & {
+  parentId?: string;
+};
 
-export function UploadFileButton(props: UploadFileButtonProps) {
+export function UploadFileButton({
+  parentId,
+  ...props
+}: UploadFileButtonProps) {
   const { t } = useTranslation("resources");
   const inputRef = useRef<HTMLInputElement>(null);
   const toastManager = useToastManager();
@@ -48,6 +53,7 @@ export function UploadFileButton(props: UploadFileButtonProps) {
         name: file.name,
         contentType: file.type,
         contentLength: file.size,
+        parentId: parentId,
       });
 
       const uploadUrl = await createUploadUrl.mutateAsync(uploadUrlRequest);
@@ -63,7 +69,7 @@ export function UploadFileButton(props: UploadFileButtonProps) {
       await completeUpload.mutateAsync(uploadUrl.id);
 
       await queryClient.invalidateQueries({
-        queryKey: listResourcesQueryOptions().queryKey,
+        queryKey: listResourcesQueryOptions({ parentId: parentId }).queryKey,
       });
     })();
 

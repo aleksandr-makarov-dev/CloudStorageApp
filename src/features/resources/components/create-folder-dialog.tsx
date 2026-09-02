@@ -18,11 +18,15 @@ import { useTranslation } from "react-i18next";
 
 type CreateFolderDialogProps = {
   handle: DialogHandle;
+  parentId?: string;
 };
 
 const formId = "CREATE_FOLDER_FORM";
 
-export function CreateFolderDialog({ handle }: CreateFolderDialogProps) {
+export function CreateFolderDialog({
+  handle,
+  parentId,
+}: CreateFolderDialogProps) {
   const { t } = useTranslation("resources");
 
   const toastManager = useToastManager();
@@ -33,7 +37,7 @@ export function CreateFolderDialog({ handle }: CreateFolderDialogProps) {
     createFolder.mutate(data, {
       onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey: listResourcesQueryOptions().queryKey,
+          queryKey: listResourcesQueryOptions({ parentId: parentId }).queryKey,
         });
 
         toastManager.add({
@@ -63,7 +67,7 @@ export function CreateFolderDialog({ handle }: CreateFolderDialogProps) {
 
         <CreateFolderForm
           formId={formId}
-          defaultValues={{ name: "" }}
+          defaultValues={{ name: "", parentId: parentId }}
           onSubmit={handleSubmit}
         />
 

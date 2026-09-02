@@ -22,19 +22,28 @@ import Button from "@/shared/ui/button";
 import { CreateFolderDialog } from "./create-folder-dialog";
 import { UploadFileButton } from "./upload-file-button";
 import { useTranslation } from "react-i18next";
+import { Link } from "@tanstack/react-router";
 
 const menuActionHandle = createMenuHandle<Resource>();
 const updateResourceDialogHandle = createDialogHandle<Resource>();
 const createFolderDialogHandle = createDialogHandle();
 
-export function ResourceTable() {
+type ResourceTableProps = {
+  parentId?: string;
+};
+
+export function ResourceTable({ parentId }: ResourceTableProps) {
   const { t } = useTranslation("resources");
-  const listResources = useListResources();
+  const listResources = useListResources({
+    query: {
+      parentId: parentId,
+    },
+  });
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-3 w-full">
       <div className="flex flex-row gap-x-3">
-        <UploadFileButton variant="primary">
+        <UploadFileButton variant="primary" parentId={parentId}>
           {t("ResourceTable.UploadFile")}
         </UploadFileButton>
 
@@ -82,7 +91,19 @@ export function ResourceTable() {
 
           {listResources.data?.map((row) => (
             <TableRow key={row.id}>
-              <TableCell>{row.name}</TableCell>
+              <TableCell>
+                {row.isFolder ? (
+                  <Link
+                    className="font-medium"
+                    to="/"
+                    search={{ parentId: row.id }}
+                  >
+                    {row.name}
+                  </Link>
+                ) : (
+                  row.name
+                )}
+              </TableCell>
 
               <TableCell>
                 {row.isFolder
@@ -124,7 +145,10 @@ export function ResourceTable() {
       />
 
       <UpdateResourceDialog handle={updateResourceDialogHandle} />
-      <CreateFolderDialog handle={createFolderDialogHandle} />
+      <CreateFolderDialog
+        handle={createFolderDialogHandle}
+        parentId={parentId}
+      />
     </div>
   );
 }

@@ -7,6 +7,7 @@ export type UploadToBucketParams = {
 };
 
 export const createUploadUrlInputSchema = z.object({
+  parentId: z.string().optional(),
   name: z.string().min(1).max(128),
   contentType: z.string().min(1).max(32),
   contentLength: z.coerce.number().min(1),
@@ -32,8 +33,7 @@ export type Resource = {
 };
 
 export type ListResourcesQueryParams = {
-  page?: number;
-  size?: number;
+  parentId?: string;
 };
 
 export const updateResourceInputSchema = z.object({
@@ -43,6 +43,7 @@ export const updateResourceInputSchema = z.object({
 export type UpdateResourceRequest = z.infer<typeof updateResourceInputSchema>;
 
 export const createFolderInputSchema = z.object({
+  parentId: z.string().optional(),
   name: z.string().min(1).max(128),
 });
 

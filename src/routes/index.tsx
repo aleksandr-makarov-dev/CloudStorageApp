@@ -2,12 +2,17 @@ import { ResourceTable } from "@/features/resources/components/resource-table";
 import Button from "@/shared/ui/button";
 import { createFileRoute } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
+import z from "zod";
 
 export const Route = createFileRoute("/")({
   component: Index,
+  validateSearch: z.object({
+    parentId: z.string().optional(),
+  }),
 });
 
 function Index() {
+  const { parentId } = Route.useSearch();
   const { t } = useTranslation("resources");
 
   return (
@@ -20,7 +25,7 @@ function Index() {
           {t("Sidebar.Trash")}
         </Button>
       </div>
-      <ResourceTable />
+      <ResourceTable parentId={parentId} />
     </div>
   );
 }
