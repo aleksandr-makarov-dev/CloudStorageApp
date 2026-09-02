@@ -75,7 +75,7 @@ export function ResourceTable({ parentId }: ResourceTableProps) {
         <TableBody>
           {listResources.isLoading && (
             <TableRow>
-              <TableCell colSpan={6} className="text-center">
+              <TableCell colSpan={7} className="text-center">
                 {t("ResourceTable.LoadingResources")}
               </TableCell>
             </TableRow>
@@ -83,7 +83,7 @@ export function ResourceTable({ parentId }: ResourceTableProps) {
 
           {listResources.isError && (
             <TableRow>
-              <TableCell colSpan={6} className="text-center">
+              <TableCell colSpan={7} className="text-center">
                 {listResources.error.message}
               </TableCell>
             </TableRow>
