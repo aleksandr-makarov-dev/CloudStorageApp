@@ -32,7 +32,7 @@ export type Resource = {
   lastModifiedAtUtc?: string;
 };
 
-export type ListResourcesQueryParams = {
+export type ListResourcesQuery = {
   parentId?: string;
 };
 
@@ -48,3 +48,5 @@ export const createFolderInputSchema = z.object({
 });
 
 export type CreateFolderRequest = z.infer<typeof createFolderInputSchema>;
+
+export type ListTrashQuery = {};

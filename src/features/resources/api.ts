@@ -4,6 +4,7 @@ import type {
   CreateUploadUrl,
   CreateUploadUrlRequest,
   ListResourcesQueryParams,
+  ListTrashQuery,
   Resource,
   UpdateResourceRequest,
 } from "./types";
@@ -44,4 +45,12 @@ export async function createFolderAsync(
   request: CreateFolderRequest,
 ): Promise<Resource> {
   return apiClient.post(`${baseUrl}/folder`, request);
+}
+
+export async function listTrashAsync(
+  query: ListTrashQuery,
+): Promise<Array<Resource>> {
+  return apiClient.get(`${baseUrl}/trash`, {
+    params: query,
+  });
 }

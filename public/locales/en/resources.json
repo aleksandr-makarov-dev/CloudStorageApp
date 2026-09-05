@@ -50,5 +50,10 @@
   "Sidebar": {
     "MyDrive": "My Drive",
     "Trash": "Trash"
-  }
+  },
+  "TrashActionMenu": {
+    "Restore": "Restore"
+  },
+  "MyDrive": "My drive",
+  "Trash": "Trash"
 }

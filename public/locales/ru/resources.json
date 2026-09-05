@@ -50,5 +50,10 @@
   "Sidebar": {
     "MyDrive": "Мой диск",
     "Trash": "Корзина"
-  }
+  },
+  "TrashActionMenu": {
+    "Restore": "Восстановить"
+  },
+  "MyDrive": "Мой диск",
+  "Trash": "Корзина"
 }

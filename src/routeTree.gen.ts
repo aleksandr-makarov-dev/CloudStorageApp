@@ -10,33 +10,60 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DriveRouteRouteImport } from './routes/drive/route'
+import { Route as DriveIndexRouteImport } from './routes/drive/index'
+import { Route as DriveTrashRouteImport } from './routes/drive/trash'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DriveRouteRoute = DriveRouteRouteImport.update({
+  id: '/drive',
+  path: '/drive',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DriveIndexRoute = DriveIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DriveRouteRoute,
+} as any)
+const DriveTrashRoute = DriveTrashRouteImport.update({
+  id: '/trash',
+  path: '/trash',
+  getParentRoute: () => DriveRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/drive': typeof DriveRouteRouteWithChildren
+  '/drive/trash': typeof DriveTrashRoute
+  '/drive/': typeof DriveIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/drive/trash': typeof DriveTrashRoute
+  '/drive': typeof DriveIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/drive': typeof DriveRouteRouteWithChildren
+  '/drive/trash': typeof DriveTrashRoute
+  '/drive/': typeof DriveIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/drive' | '/drive/trash' | '/drive/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/drive/trash' | '/drive'
+  id: '__root__' | '/' | '/drive' | '/drive/trash' | '/drive/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DriveRouteRoute: typeof DriveRouteRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +75,47 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/drive': {
+      id: '/drive'
+      path: '/drive'
+      fullPath: '/drive'
+      preLoaderRoute: typeof DriveRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/drive/': {
+      id: '/drive/'
+      path: '/'
+      fullPath: '/drive/'
+      preLoaderRoute: typeof DriveIndexRouteImport
+      parentRoute: typeof DriveRouteRoute
+    }
+    '/drive/trash': {
+      id: '/drive/trash'
+      path: '/trash'
+      fullPath: '/drive/trash'
+      preLoaderRoute: typeof DriveTrashRouteImport
+      parentRoute: typeof DriveRouteRoute
+    }
   }
 }
 
+interface DriveRouteRouteChildren {
+  DriveTrashRoute: typeof DriveTrashRoute
+  DriveIndexRoute: typeof DriveIndexRoute
+}
+
+const DriveRouteRouteChildren: DriveRouteRouteChildren = {
+  DriveTrashRoute: DriveTrashRoute,
+  DriveIndexRoute: DriveIndexRoute,
+}
+
+const DriveRouteRouteWithChildren = DriveRouteRoute._addFileChildren(
+  DriveRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DriveRouteRoute: DriveRouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -1,5 +1,13 @@
+import { CreateFolderDialog } from "@/features/resources/components/create-folder-dialog";
+import { ResourceActionMenu } from "@/features/resources/components/resource-action-menu";
+import { UpdateResourceDialog } from "@/features/resources/components/update-resource-dialog";
+import { UploadFileButton } from "@/features/resources/components/upload-file-button";
+import { useListResources } from "@/features/resources/hooks/queries";
+import type { Resource } from "@/features/resources/types";
 import { formatBytes } from "@/shared/lib/format-bytes";
 import { formatDate } from "@/shared/lib/format-date";
+import Button from "@/shared/ui/button";
+import { createDialogHandle } from "@/shared/ui/dialog";
 import {
   createMenuHandle,
   EllipsisHorizontalIcon,
@@ -13,35 +21,33 @@ import {
   TableBody,
   TableCell,
 } from "@/shared/ui/table";
-import type { Resource } from "../types";
-import { ResourceActionMenu } from "./resource-action-menu";
-import { UpdateResourceDialog } from "./update-resource-dialog";
-import { createDialogHandle } from "@/shared/ui/dialog";
-import { useListResources } from "../hooks/queries";
-import Button from "@/shared/ui/button";
-import { CreateFolderDialog } from "./create-folder-dialog";
-import { UploadFileButton } from "./upload-file-button";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
-import { Link } from "@tanstack/react-router";
+import z from "zod";
+
+export const Route = createFileRoute("/drive/")({
+  component: RouteComponent,
+  validateSearch: z.object({
+    parentId: z.string().optional(),
+  }),
+});
 
 const menuActionHandle = createMenuHandle<Resource>();
 const updateResourceDialogHandle = createDialogHandle<Resource>();
 const createFolderDialogHandle = createDialogHandle();
 
-type ResourceTableProps = {
-  parentId?: string;
-};
+function RouteComponent() {
+  const { parentId } = Route.useSearch();
 
-export function ResourceTable({ parentId }: ResourceTableProps) {
   const { t } = useTranslation("resources");
   const listResources = useListResources({
     query: {
       parentId: parentId,
     },
   });
-
   return (
     <div className="space-y-3 w-full">
+      <h5 className="font-medium text-2xl">{t("MyDrive")}</h5>
       <div className="flex flex-row gap-x-3">
         <UploadFileButton variant="primary" parentId={parentId}>
           {t("ResourceTable.UploadFile")}
@@ -95,7 +101,7 @@ export function ResourceTable({ parentId }: ResourceTableProps) {
                 {row.isFolder ? (
                   <Link
                     className="font-medium"
-                    to="/"
+                    to="/drive"
                     search={{ parentId: row.id }}
                   >
                     {row.name}
@@ -145,6 +151,7 @@ export function ResourceTable({ parentId }: ResourceTableProps) {
       />
 
       <UpdateResourceDialog handle={updateResourceDialogHandle} />
+
       <CreateFolderDialog
         handle={createFolderDialogHandle}
         parentId={parentId}
