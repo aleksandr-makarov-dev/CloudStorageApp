@@ -1,19 +1,20 @@
 import { apiClient } from "@/shared/api/api-client";
 import type {
   CreateFolderRequest,
-  CreateUploadUrl,
   CreateUploadUrlRequest,
+  DownloadUrl,
   ListResourcesQuery,
   ListTrashQuery,
   Resource,
   UpdateResourceRequest,
+  UploadUrl,
 } from "./types";
 
 const baseUrl = "/api/v1/resources";
 
 export async function createUploadUrlAsync(
   request: CreateUploadUrlRequest,
-): Promise<CreateUploadUrl> {
+): Promise<UploadUrl> {
   return apiClient.post(`${baseUrl}/upload-url`, request);
 }
 
@@ -61,4 +62,8 @@ export async function softDeleteResourceAsync(id: string): Promise<void> {
 
 export async function restoreResourceAsync(id: string): Promise<void> {
   return apiClient.post(`${baseUrl}/${id}/restore`);
+}
+
+export async function getDownloadUrlAsync(id: string): Promise<DownloadUrl> {
+  return apiClient.get(`${baseUrl}/${id}/download-url`);
 }

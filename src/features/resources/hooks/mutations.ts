@@ -4,6 +4,7 @@ import {
   completeUploadAsync,
   createFolderAsync,
   createUploadUrlAsync,
+  getDownloadUrlAsync,
   restoreResourceAsync,
   softDeleteResourceAsync,
   updateResourceAsync,
@@ -66,5 +67,16 @@ export function useRestoreResource(options?: UseRestoreResourceOptions) {
   return useMutation({
     ...options,
     mutationFn: restoreResourceAsync,
+  });
+}
+
+export type UseGetDownloadUrlOptions = MutationConfig<
+  typeof getDownloadUrlAsync
+>;
+
+export function useGetDownloadUrl(options?: UseGetDownloadUrlOptions) {
+  return useMutation({
+    ...options,
+    mutationFn: getDownloadUrlAsync,
   });
 }

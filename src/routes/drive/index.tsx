@@ -2,7 +2,10 @@ import { CreateFolderDialog } from "@/features/resources/components/create-folde
 import { ResourceActionMenu } from "@/features/resources/components/resource-action-menu";
 import { UpdateResourceDialog } from "@/features/resources/components/update-resource-dialog";
 import { UploadFileButton } from "@/features/resources/components/upload-file-button";
-import { useSoftDeleteResource } from "@/features/resources/hooks/mutations";
+import {
+  useGetDownloadUrl,
+  useSoftDeleteResource,
+} from "@/features/resources/hooks/mutations";
 import {
   listResourcesQueryOptions,
   listTrashQueryOptions,
@@ -57,6 +60,7 @@ function RouteComponent() {
   });
 
   const softDeleteResource = useSoftDeleteResource();
+  const getDownloadUrl = useGetDownloadUrl();
 
   function handleSoftDeleteResource(resource: Resource) {
     softDeleteResource.mutate(resource.id, {
@@ -73,6 +77,26 @@ function RouteComponent() {
           title: t("SoftDeleteResource.SuccessTitle"),
           description: t("SoftDeleteResource.SuccessDescription"),
         });
+      },
+      onError: (error) => {
+        console.error("SoftDeleteResource:", JSON.stringify(error, null, 2));
+
+        toastManager.add({
+          title: error.title,
+          description: error.message,
+        });
+      },
+    });
+  }
+
+  function handleDownloadResource(resource: Resource) {
+    getDownloadUrl.mutate(resource.id, {
+      onSuccess: (downloadUrl) => {
+        const link = document.createElement("a");
+        link.href = downloadUrl.url;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
       },
       onError: (error) => {
         console.error("SoftDeleteResource:", JSON.stringify(error, null, 2));
@@ -188,6 +212,7 @@ function RouteComponent() {
         onUpdateResourceClick={(resource) =>
           updateResourceDialogHandle.openWithPayload(resource)
         }
+        onDownloadResourceClick={handleDownloadResource}
         onSoftDeleteResourceClick={handleSoftDeleteResource}
       />
 

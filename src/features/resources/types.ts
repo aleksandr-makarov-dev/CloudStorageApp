@@ -15,7 +15,7 @@ export const createUploadUrlInputSchema = z.object({
 
 export type CreateUploadUrlRequest = z.infer<typeof createUploadUrlInputSchema>;
 
-export type CreateUploadUrl = {
+export type UploadUrl = {
   id: string;
   url: string;
   expiresAtUtc: string;
@@ -50,3 +50,8 @@ export const createFolderInputSchema = z.object({
 export type CreateFolderRequest = z.infer<typeof createFolderInputSchema>;
 
 export type ListTrashQuery = {};
+
+export type DownloadUrl = {
+  url: string;
+  expiresAtUtc: string;
+};

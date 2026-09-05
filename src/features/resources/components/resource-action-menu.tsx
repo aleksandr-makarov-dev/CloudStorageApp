@@ -11,12 +11,14 @@ import { useTranslation } from "react-i18next";
 type ResourceActionMenuProps = {
   handle: MenuHandle<Resource>;
   onUpdateResourceClick: (resource: Resource) => void;
+  onDownloadResourceClick: (resource: Resource) => void;
   onSoftDeleteResourceClick: (resource: Resource) => void;
 };
 
 export function ResourceActionMenu({
   handle,
   onUpdateResourceClick,
+  onDownloadResourceClick,
   onSoftDeleteResourceClick,
 }: ResourceActionMenuProps) {
   const { t } = useTranslation("resources");
@@ -33,6 +35,9 @@ export function ResourceActionMenu({
             </MenuItem>
             <MenuItem>{t("ResourceActionMenu.Copy")}</MenuItem>
             <MenuItem>{t("ResourceActionMenu.Move")}</MenuItem>
+            <MenuItem onClick={() => onDownloadResourceClick(payload)}>
+              {t("ResourceActionMenu.Download")}
+            </MenuItem>
             <MenuSeparator />
             <MenuItem
               className="text-red-700 data-highlighted:text-white data-highlighted:before:bg-red-700"
