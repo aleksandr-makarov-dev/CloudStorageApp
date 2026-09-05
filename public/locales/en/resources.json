@@ -1,4 +1,6 @@
 {
+  "MyDrive": "My drive",
+  "Trash": "Trash",
   "ResourceTable": {
     "Name": "Name",
     "Type": "Type",
@@ -16,7 +18,7 @@
     "Rename": "Rename",
     "Copy": "Copy",
     "Move": "Move",
-    "Delete": "Delete"
+    "Delete": "To Trash"
   },
   "UpdateResourceDialog": {
     "Title": "Update resource",
@@ -54,6 +56,12 @@
   "TrashActionMenu": {
     "Restore": "Restore"
   },
-  "MyDrive": "My drive",
-  "Trash": "Trash"
+  "SoftDeleteResource": {
+    "SuccessTitle": "Resource moved to trash",
+    "SuccessDescription": "The resource was successfully moved to trash."
+  },
+  "RestoreResource": {
+    "SuccessTitle": "Resource restored",
+    "SuccessDescription": "The resource was successfully restored."
+  }
 }

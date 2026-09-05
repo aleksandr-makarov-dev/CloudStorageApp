@@ -2,7 +2,12 @@ import { CreateFolderDialog } from "@/features/resources/components/create-folde
 import { ResourceActionMenu } from "@/features/resources/components/resource-action-menu";
 import { UpdateResourceDialog } from "@/features/resources/components/update-resource-dialog";
 import { UploadFileButton } from "@/features/resources/components/upload-file-button";
-import { useListResources } from "@/features/resources/hooks/queries";
+import { useSoftDeleteResource } from "@/features/resources/hooks/mutations";
+import {
+  listResourcesQueryOptions,
+  listTrashQueryOptions,
+  useListResources,
+} from "@/features/resources/hooks/queries";
 import type { Resource } from "@/features/resources/types";
 import { formatBytes } from "@/shared/lib/format-bytes";
 import { formatDate } from "@/shared/lib/format-date";
@@ -21,6 +26,8 @@ import {
   TableBody,
   TableCell,
 } from "@/shared/ui/table";
+import { useToastManager } from "@/shared/ui/toast";
+import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import z from "zod";
@@ -40,11 +47,44 @@ function RouteComponent() {
   const { parentId } = Route.useSearch();
 
   const { t } = useTranslation("resources");
+  const queryClient = useQueryClient();
+  const toastManager = useToastManager();
+
   const listResources = useListResources({
     query: {
       parentId: parentId,
     },
   });
+
+  const softDeleteResource = useSoftDeleteResource();
+
+  function handleSoftDeleteResource(resource: Resource) {
+    softDeleteResource.mutate(resource.id, {
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: listResourcesQueryOptions({ parentId: parentId }).queryKey,
+        });
+
+        queryClient.invalidateQueries({
+          queryKey: listTrashQueryOptions().queryKey,
+        });
+
+        toastManager.add({
+          title: t("SoftDeleteResource.SuccessTitle"),
+          description: t("SoftDeleteResource.SuccessDescription"),
+        });
+      },
+      onError: (error) => {
+        console.error("SoftDeleteResource:", JSON.stringify(error, null, 2));
+
+        toastManager.add({
+          title: error.title,
+          description: error.message,
+        });
+      },
+    });
+  }
+
   return (
     <div className="space-y-3 w-full">
       <h5 className="font-medium text-2xl">{t("MyDrive")}</h5>
@@ -148,6 +188,7 @@ function RouteComponent() {
         onUpdateResourceClick={(resource) =>
           updateResourceDialogHandle.openWithPayload(resource)
         }
+        onSoftDeleteResourceClick={handleSoftDeleteResource}
       />
 
       <UpdateResourceDialog handle={updateResourceDialogHandle} />

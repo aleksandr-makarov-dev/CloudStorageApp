@@ -4,6 +4,8 @@ import {
   completeUploadAsync,
   createFolderAsync,
   createUploadUrlAsync,
+  restoreResourceAsync,
+  softDeleteResourceAsync,
   updateResourceAsync,
 } from "../api";
 import { uploadToBucketAsync } from "../storage";
@@ -44,5 +46,25 @@ export function useCreateFolder(options?: UseCreateFolderOptions) {
   return useMutation({
     ...options,
     mutationFn: createFolderAsync,
+  });
+}
+
+type UseSoftDeleteResourceOptions = MutationConfig<
+  typeof softDeleteResourceAsync
+>;
+
+export function useSoftDeleteResource(options?: UseSoftDeleteResourceOptions) {
+  return useMutation({
+    ...options,
+    mutationFn: softDeleteResourceAsync,
+  });
+}
+
+type UseRestoreResourceOptions = MutationConfig<typeof restoreResourceAsync>;
+
+export function useRestoreResource(options?: UseRestoreResourceOptions) {
+  return useMutation({
+    ...options,
+    mutationFn: restoreResourceAsync,
   });
 }

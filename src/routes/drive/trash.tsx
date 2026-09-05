@@ -1,5 +1,10 @@
 import { TrashActionMenu } from "@/features/resources/components/trash-action-menu";
-import { useListTrash } from "@/features/resources/hooks/queries";
+import { useRestoreResource } from "@/features/resources/hooks/mutations";
+import {
+  listResourcesQueryOptions,
+  listTrashQueryOptions,
+  useListTrash,
+} from "@/features/resources/hooks/queries";
 import type { Resource } from "@/features/resources/types";
 import { formatBytes } from "@/shared/lib/format-bytes";
 import { formatDate } from "@/shared/lib/format-date";
@@ -16,6 +21,8 @@ import {
   TableBody,
   TableCell,
 } from "@/shared/ui/table";
+import { useToastManager } from "@/shared/ui/toast";
+import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 
@@ -27,7 +34,39 @@ const menuActionHandle = createMenuHandle<Resource>();
 
 function RouteComponent() {
   const { t } = useTranslation("resources");
+
+  const queryClient = useQueryClient();
+  const toastManager = useToastManager();
+
   const trash = useListTrash();
+  const restoreResource = useRestoreResource();
+
+  function handleRestoreResource(resource: Resource) {
+    restoreResource.mutate(resource.id, {
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: listTrashQueryOptions().queryKey,
+        });
+
+        queryClient.invalidateQueries({
+          queryKey: listResourcesQueryOptions().queryKey,
+        });
+
+        toastManager.add({
+          title: t("RestoreResource.SuccessTitle"),
+          description: t("RestoreResource.SuccessDescription"),
+        });
+      },
+      onError: (error) => {
+        console.error("RestoreResource:", JSON.stringify(error, null, 2));
+
+        toastManager.add({
+          title: error.title,
+          description: error.message,
+        });
+      },
+    });
+  }
 
   return (
     <div className="space-y-3 w-full">
@@ -115,7 +154,7 @@ function RouteComponent() {
       </Table>
       <TrashActionMenu
         handle={menuActionHandle}
-        onRestoreResourceClick={(resource) => {}}
+        onRestoreResourceClick={handleRestoreResource}
       />
     </div>
   );

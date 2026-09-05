@@ -1,4 +1,6 @@
 {
+  "MyDrive": "Мой диск",
+  "Trash": "Корзина",
   "ResourceTable": {
     "Name": "Название",
     "Type": "Тип",
@@ -16,7 +18,7 @@
     "Rename": "Переименовать",
     "Copy": "Копировать",
     "Move": "Переместить",
-    "Delete": "Удалить"
+    "Delete": "В корзину"
   },
   "UpdateResourceDialog": {
     "Title": "Изменение ресурса",
@@ -54,6 +56,12 @@
   "TrashActionMenu": {
     "Restore": "Восстановить"
   },
-  "MyDrive": "Мой диск",
-  "Trash": "Корзина"
+  "SoftDeleteResource": {
+    "SuccessTitle": "Ресурс перемещен в корзину",
+    "SuccessDescription": "Данный ресурс был успешно перемещен в корзину."
+  },
+  "RestoreResource": {
+    "SuccessTitle": "Ресурс восстановлен",
+    "SuccessDescription": "Ресурс был успешно восстановлен."
+  }
 }

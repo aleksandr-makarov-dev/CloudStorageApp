@@ -3,7 +3,7 @@ import type {
   CreateFolderRequest,
   CreateUploadUrl,
   CreateUploadUrlRequest,
-  ListResourcesQueryParams,
+  ListResourcesQuery,
   ListTrashQuery,
   Resource,
   UpdateResourceRequest,
@@ -24,7 +24,7 @@ export async function completeUploadAsync(
 }
 
 export async function listResourcesAsync(
-  query: ListResourcesQueryParams,
+  query: ListResourcesQuery,
 ): Promise<Array<Resource>> {
   return apiClient.get(baseUrl, {
     params: query,
@@ -53,4 +53,12 @@ export async function listTrashAsync(
   return apiClient.get(`${baseUrl}/trash`, {
     params: query,
   });
+}
+
+export async function softDeleteResourceAsync(id: string): Promise<void> {
+  return apiClient.delete(`${baseUrl}/${id}`);
+}
+
+export async function restoreResourceAsync(id: string): Promise<void> {
+  return apiClient.post(`${baseUrl}/${id}/restore`);
 }
